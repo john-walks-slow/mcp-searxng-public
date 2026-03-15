@@ -1,6 +1,6 @@
 {
   "name": "@johnnren/mcp-searxng-public",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for SearXNG web search with HTML parsing",
   "type": "module",
   "main": "dist/index.js",
