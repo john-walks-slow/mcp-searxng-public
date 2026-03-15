@@ -22,12 +22,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/johnnren/mcp-searxng-public.git"
+    "url": "git+https://github.com/john-walks-slow/mcp-searxng-public.git"
   },
   "bugs": {
-    "url": "https://github.com/johnnren/mcp-searxng-public/issues"
+    "url": "https://github.com/john-walks-slow/mcp-searxng-public/issues"
   },
-  "homepage": "https://github.com/johnnren/mcp-searxng-public#readme",
+  "homepage": "https://github.com/john-walks-slow/mcp-searxng-public#readme",
   "dependencies": {
     "fastmcp": "^3.34.0",
     "undici": "^7.24.2",
