@@ -89,6 +89,14 @@ Web search via SearXNG.
 { "query": "React hooks", "engines": "github,stackoverflow" }
 ```
 
+## Publishing
+
+```bash
+# Create a version tag and push to trigger GitHub Actions release
+git tag v0.1.0
+git push origin v0.1.0
+```
+
 ## License
 
 MIT
