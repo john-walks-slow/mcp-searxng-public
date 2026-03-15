@@ -1,3 +1,4 @@
+import { randomInt } from 'crypto'
 import { MIN_INTERVAL } from './config.js'
 
 /**
@@ -10,19 +11,28 @@ interface ServerState {
 
 /**
  * Throttle 管理器
- * 确保对每个服务器的请求之间有最小间隔
+ * 确保对每个服务器的请求之间有最小间隔，并加入随机抖动避免同步请求
  */
 class ThrottleManager {
   private servers: Map<string, ServerState> = new Map()
   private minInterval: number
+  private jitterRange = [0, 100] // 随机抖动范围 [min, max] ms
 
   constructor(minInterval: number = MIN_INTERVAL) {
     this.minInterval = minInterval
   }
 
   /**
+   * 生成带随机抖动的等待时间
+   */
+  private getJitteredInterval(): number {
+    const [min, max] = this.jitterRange
+    return this.minInterval + randomInt(min, max + 1)
+  }
+
+  /**
    * 获取请求许可
-   * 如果距离上次请求不足 minInterval，则阻塞等待
+   * 如果距离上次请求不足 minInterval + jitter，则阻塞等待
    */
   async acquire(serverUrl: string): Promise<void> {
     let state = this.servers.get(serverUrl)
@@ -33,7 +43,8 @@ class ThrottleManager {
 
     const now = Date.now()
     const elapsed = now - state.lastRequestTime
-    const waitTime = this.minInterval - elapsed
+    const jitteredInterval = this.getJitteredInterval()
+    const waitTime = jitteredInterval - elapsed
 
     if (waitTime <= 0) {
       // 可以立即执行
@@ -63,9 +74,12 @@ class ThrottleManager {
     const next = state.queue.shift()
     if (next) {
       next()
-      // 如果队列还有等待的请求，继续设置定时器
+      // 如果队列还有等待的请求，继续设置定时器（带随机抖动）
       if (state.queue.length > 0) {
-        setTimeout(() => this.processQueue(serverUrl), this.minInterval)
+        setTimeout(
+          () => this.processQueue(serverUrl),
+          this.getJitteredInterval(),
+        )
       }
     }
   }

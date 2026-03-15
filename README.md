@@ -4,9 +4,10 @@ Free web search for your AI using public SearXNG instances — a privacy-focused
 
 ## Features
 
-- **HTML Parsing**: Most public SearXNG instances disable JSON API for privacy, this server parses HTML responses directly
+- **HTML Parsing**: Most public SearXNG instances disable JSON API, this server parses HTML responses directly
+- **Rich Parameters**: categories, engines, safesearch, time range, language, pagination, return fields
 - **Parallel Racing & Deduplication**: Randomly select `BATCH_SIZE` servers, query in parallel, merge results from top `MIN_SERVERS` fastest
-- **Rich Parameters**: categories, engines, safesearch, time range, language, pagination
+- **Auto Throttling**: Per-server request queue with configurable minimum interval, preventing rate limiting from public instances
 
 ## Usage with MCP Clients
 
@@ -21,6 +22,7 @@ Add to your MCP client configuration:
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
+        "SEARXNG_DEFAULT_ENGINES": "google",
         "SEARXNG_DEFAULT_PAGES": "1",
         "SEARXNG_DEFAULT_SAFESARCH": "0"
       }
@@ -37,12 +39,12 @@ Add to your MCP client configuration:
 | ---------------------------- | -------------------------------------------------------------------- | -------------- |
 | `SEARXNG_BASE_URL`           | SearXNG server URLs (semicolon-separated) **Required**               | -              |
 | `SEARXNG_DEFAULT_LANGUAGE`   | Default language code                                                | -              |
-| `SEARXNG_BATCH_SIZE`         | Servers to query per search (number or `all`)                        | `3`            |
-| `SEARXNG_MIN_SERVERS`        | Merge results from top N fastest servers                             | `2`            |
+| `SEARXNG_BATCH_SIZE`         | Servers to query per search (number or `all`)                        | `1`            |
+| `SEARXNG_MIN_SERVERS`        | Merge results from top N fastest servers                             | `1`            |
 | `SEARXNG_DEFAULT_ENGINES`    | Default engines (comma-separated)                                    | Server default |
 | `SEARXNG_DEFAULT_PAGES`      | Default pages to fetch                                               | `1`            |
 | `SEARXNG_DEFAULT_SAFESARCH`  | Safe search level (0=off, 1=moderate, 2=strict)                      | Server default |
-| `SEARXNG_MIN_INTERVAL`       | Min interval between requests to same server (ms)                    | `1450`         |
+| `SEARXNG_MIN_INTERVAL`       | Min interval between requests to same server (ms)                    | `450`          |
 | `SEARXNG_RESULT_FIELDS`      | Fields included in result: url, title, summary, engine, sourceServer | All fields     |
 | `SEARXNG_VISIBLE_PARAMETERS` | Parameters visible to LLM                                            | `all`          |
 

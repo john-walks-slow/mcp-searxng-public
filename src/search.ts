@@ -1,4 +1,3 @@
-import { randomInt } from 'crypto'
 import { UserError } from 'fastmcp'
 import {
   BASE_URLS,
@@ -10,7 +9,7 @@ import {
   DEFAULT_LANGUAGE,
 } from './config.js'
 import type { Log, SearchResult, ServerSearchResult } from './types.js'
-import { getRandomUserAgent, getBrowserHeaders } from './browser.js'
+import { getRandomUserAgent } from './browser.js'
 import { parseSearchResults } from './parser.js'
 import { shuffleAndTake, dedupeByUrls } from './utils.js'
 import { throttleManager } from './throttle.js'
@@ -103,10 +102,6 @@ export async function fetchResults(
         },
       })
     }
-
-    // 随机延迟，模拟人类行为
-    const delay = randomInt(300, 600)
-    await new Promise((resolve) => setTimeout(resolve, delay))
   } catch (initError) {
     // 初始化失败不影响主请求
     log.warn('初始化请求失败，继续搜索', {
@@ -115,13 +110,19 @@ export async function fetchResults(
   }
 
   // ========== 执行搜索请求 ==========
-  const headers = getBrowserHeaders(baseUrl, userAgent)
+  // 再次获取许可，确保主页/CSS 请求与搜索请求之间有间隔
+  await throttleManager.acquire(baseUrl)
+  // 简化请求头
+  const searchHeaders = {
+    'User-Agent': userAgent,
+    'Referer': baseUrl + '/',
+  }
 
   let response: Response
   try {
     response = await fetch(url, {
       method: 'GET',
-      headers,
+      headers: searchHeaders,
       redirect: 'follow',
     })
   } catch (error) {
@@ -195,7 +196,7 @@ export async function fetchMultiplePages(
 }
 
 /**
- * 并行竞速搜索多个服务器
+ * 并行竞速搜索多个服务器，失败时自动重试其他服务器以满足 MIN_SERVERS
  */
 export async function raceSearch(
   log: Log,
@@ -226,41 +227,69 @@ export async function raceSearch(
   const batchSize: number | 'all' =
     BATCH_SIZE === 'all' ? 'all' : parseInt(BATCH_SIZE, 10) || 3
 
-  // 随机选取服务器
-  const selectedServers = shuffleAndTake(BASE_URLS, batchSize)
+  // 初始随机选取服务器
+  const initialServers = shuffleAndTake(BASE_URLS, batchSize)
+  const triedServers = new Set<string>() // 已尝试的服务器
+  const validResults: ServerSearchResult[] = [] // 成功的结果
 
-  log.debug(`并行请求 ${selectedServers.length} 个服务器`, {
-    servers: selectedServers,
+  // 将初始服务器加入待尝试列表
+  const serversToTry = [...initialServers]
+
+  log.debug(`开始并行请求，目标: ${MIN_SERVERS} 个成功服务器`, {
+    initialBatch: initialServers,
   })
 
-  // 并行发起请求
-  const searchPromises: Promise<ServerSearchResult | null>[] =
-    selectedServers.map((serverUrl: string) =>
-      fetchMultiplePages(log, query, serverUrl, pages, startPage, {
-        categories,
-        engines,
-        safesearch,
-        timeRange,
-        language,
-      }).catch((error: unknown) => {
-        log.warn(`服务器 ${serverUrl} 请求失败`, {
-          error: error instanceof Error ? error.message : String(error),
-        })
-        return null
-      }),
+  // 循环直到满足条件或无更多服务器
+  while (validResults.length < MIN_SERVERS && serversToTry.length > 0) {
+    // 取出一批服务器尝试
+    const batch = serversToTry.splice(0, serversToTry.length)
+    batch.forEach((s) => triedServers.add(s))
+
+    // 并行发起请求
+    const searchPromises: Promise<ServerSearchResult | null>[] = batch.map(
+      (serverUrl: string) =>
+        fetchMultiplePages(log, query, serverUrl, pages, startPage, {
+          categories,
+          engines,
+          safesearch,
+          timeRange,
+          language,
+        }).catch((error: unknown) => {
+          log.warn(`服务器 ${serverUrl} 请求失败`, {
+            error: error instanceof Error ? error.message : String(error),
+          })
+          return null
+        }),
     )
 
-  // 等待所有请求完成
-  const results = await Promise.all(searchPromises)
+    // 等待当前批次完成
+    const results = await Promise.all(searchPromises)
 
-  // 过滤有效结果（保持原始顺序）
-  const validResults = results.filter(
-    (r: ServerSearchResult | null): r is ServerSearchResult =>
-      r !== null && r.results.length > 0,
-  )
+    // 收集有效结果
+    for (const r of results) {
+      if (r !== null && r.results.length > 0) {
+        validResults.push(r)
+      }
+    }
+
+    // 如果结果不足，尝试从剩余服务器补充
+    if (validResults.length < MIN_SERVERS) {
+      const remainingServers = BASE_URLS.filter((s) => !triedServers.has(s))
+      if (remainingServers.length > 0) {
+        // 计算需要补充的服务器数量
+        const needed = MIN_SERVERS - validResults.length
+        const extraServers = shuffleAndTake(remainingServers, needed)
+        serversToTry.push(...extraServers)
+        log.debug(
+          `成功服务器不足 (${validResults.length}/${MIN_SERVERS})，补充 ${extraServers.length} 个服务器重试`,
+          { extraServers },
+        )
+      }
+    }
+  }
 
   log.debug(`成功获取结果的服务器: ${validResults.length} 个`, {
-    servers: validResults.map((r: ServerSearchResult) => ({
+    servers: validResults.map((r) => ({
       url: r.serverUrl,
       count: r.results.length,
     })),

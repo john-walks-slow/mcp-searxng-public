@@ -10,10 +10,10 @@ export const BASE_URLS: string[] = (process.env.SEARXNG_BASE_URL || '')
 export const DEFAULT_LANGUAGE = process.env.SEARXNG_DEFAULT_LANGUAGE || 'en'
 
 // 每次搜索随机抽取几个服务器（number 或 'all'）
-export const BATCH_SIZE = process.env.SEARXNG_BATCH_SIZE || '3'
+export const BATCH_SIZE = process.env.SEARXNG_BATCH_SIZE || '1'
 
 // 取前几个最快返回的服务器的结果聚合
-export const MIN_SERVERS = parseInt(process.env.SEARXNG_MIN_SERVERS || '2', 10)
+export const MIN_SERVERS = parseInt(process.env.SEARXNG_MIN_SERVERS || '1', 10)
 
 // 默认搜索引擎
 export const DEFAULT_ENGINES = process.env.SEARXNG_DEFAULT_ENGINES || ''
@@ -37,7 +37,7 @@ export const DEFAULT_TIME_RANGE = process.env.SEARXNG_DEFAULT_TIME_RANGE || ''
 
 // 同一服务器两次请求的最小间隔（毫秒）
 export const MIN_INTERVAL = parseInt(
-  process.env.SEARXNG_MIN_INTERVAL || '1450',
+  process.env.SEARXNG_MIN_INTERVAL || '450',
   10,
 )
 

@@ -5,8 +5,9 @@
 ## 特性
 
 - **HTML 解析**：大多数公共 SearXNG 实例禁用了 JSON API，本服务器直接解析 HTML 响应
-- **并行竞速与去重**：随机选择 `BATCH_SIZE` 个服务器，并行查询，合并前 `MIN_SERVERS` 个最快响应的结果
-- **丰富参数**：支持分类、引擎、安全搜索、时间范围、语言、分页
+- **丰富参数**：支持分类、引擎、安全搜索、时间范围、语言、分页、返回格式
+- **并行与去重**：随机选择 `BATCH_SIZE` 个服务器，并行查询，合并前 `MIN_SERVERS` 个最快响应的结果
+- **自动节流**：全局请求队列，按服务器自动排队，可配置最小请求间隔，避免触发公共实例的频率限制
 
 ## MCP 客户端配置
 
@@ -19,6 +20,7 @@
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
+        "SEARXNG_DEFAULT_ENGINES": "google",
         "SEARXNG_DEFAULT_PAGES": "1",
         "SEARXNG_DEFAULT_SAFESARCH": "0"
       }
@@ -33,12 +35,12 @@
 | ---------------------------- | -------------------------------------------- | --------------------------------------- |
 | `SEARXNG_BASE_URL`           | SearXNG 服务器地址（分号分隔）**必需**       | -                                       |
 | `SEARXNG_DEFAULT_LANGUAGE`   | 默认语言代码                                 | -                                       |
-| `SEARXNG_BATCH_SIZE`         | 每次搜索随机选择的服务器数量（数字或 `all`） | `3`                                     |
-| `SEARXNG_MIN_SERVERS`        | 合并前 N 个最快服务器的结果                  | `2`                                     |
+| `SEARXNG_BATCH_SIZE`         | 每次搜索随机选择的服务器数量（数字或 `all`） | `1`                                     |
+| `SEARXNG_MIN_SERVERS`        | 合并前 N 个最快服务器的结果                  | `1`                                     |
 | `SEARXNG_DEFAULT_ENGINES`    | 默认搜索引擎（逗号分隔）                     | 服务器默认                              |
 | `SEARXNG_DEFAULT_PAGES`      | 默认获取页数                                 | `1`                                     |
 | `SEARXNG_DEFAULT_SAFESARCH`  | 默认安全搜索级别（0=关闭, 1=中等, 2=严格）   | 服务器默认                              |
-| `SEARXNG_MIN_INTERVAL`       | 同一服务器两次请求的最小间隔（毫秒）         | `1450`                                  |
+| `SEARXNG_MIN_INTERVAL`       | 同一服务器两次请求的最小间隔（毫秒）         | `450`                                   |
 | `SEARXNG_RESULT_FIELDS`      | 返回结果包含的字段                           | `url,title,summary,engine,sourceServer` |
 | `SEARXNG_VISIBLE_PARAMETERS` | 对 LLM 可见的参数                            | `all`                                   |
 
