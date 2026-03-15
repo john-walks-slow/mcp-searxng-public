@@ -1,4 +1,4 @@
-# @johnnren/mcp-searxng-public
+# @johnnren/mcp-searxng-public-extended
 
 使用公共 SearXNG 实例为你的 AI 提供免费网络搜索能力。
 
@@ -18,7 +18,7 @@
   "mcpServers": {
     "searxng": {
       "command": "npx",
-      "args": ["-y", "@johnnren/mcp-searxng-public"],
+      "args": ["-y", "@johnnren/mcp-searxng-public-extended"],
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
