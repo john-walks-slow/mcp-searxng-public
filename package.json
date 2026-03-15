@@ -1,0 +1,43 @@
+{
+  "name": "@johnnren/mcp-searxng-public",
+  "version": "1.0.0",
+  "description": "MCP server for SearXNG web search with HTML parsing",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-searxng-public": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "searxng",
+    "search",
+    "web-search"
+  ],
+  "author": "johnnren",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnnren/mcp-searxng-public.git"
+  },
+  "bugs": {
+    "url": "https://github.com/johnnren/mcp-searxng-public/issues"
+  },
+  "homepage": "https://github.com/johnnren/mcp-searxng-public#readme",
+  "dependencies": {
+    "fastmcp": "^3.34.0",
+    "undici": "^7.24.2",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
