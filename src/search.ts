@@ -1,11 +1,8 @@
-import { randomInt } from 'crypto'
 import { UserError } from 'fastmcp'
 import {
   BASE_URLS,
   BATCH_SIZE,
   MIN_SERVERS,
-  DELAY_MIN,
-  DELAY_MAX,
   DEFAULT_PAGES,
   DEFAULT_ENGINES,
   DEFAULT_SAFESARCH,
@@ -15,6 +12,7 @@ import type { Log, SearchResult, ServerSearchResult } from './types.js'
 import { getRandomUserAgent, getBrowserHeaders } from './browser.js'
 import { parseSearchResults } from './parser.js'
 import { shuffleAndTake, dedupeByUrls } from './utils.js'
+import { throttleManager } from './throttle.js'
 
 /**
  * 从 SearXNG 获取搜索结果（单页）
@@ -48,6 +46,9 @@ export async function fetchResults(
 
   const url = `${baseUrl}/search?${params.toString()}`
   log.debug('正在获取搜索结果', { url })
+
+  // 获取请求许可（throttle 控制）
+  await throttleManager.acquire(baseUrl)
 
   // 随机选择 User-Agent
   const userAgent = getRandomUserAgent()
@@ -117,12 +118,6 @@ export async function fetchMultiplePages(
       allResults.push(...pageResults)
 
       if (pageResults.length === 0) break
-
-      if (i < pages - 1) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, randomInt(DELAY_MIN, DELAY_MAX)),
-        )
-      }
     } catch (error) {
       log.warn(`获取第 ${page} 页结果失败`, {
         error: error instanceof Error ? error.message : String(error),

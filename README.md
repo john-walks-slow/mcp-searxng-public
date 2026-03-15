@@ -42,8 +42,7 @@ Add to your MCP client configuration:
 | `SEARXNG_DEFAULT_ENGINES`    | Default engines (comma-separated)                                    | Server default |
 | `SEARXNG_DEFAULT_PAGES`      | Default pages to fetch                                               | `1`            |
 | `SEARXNG_DEFAULT_SAFESARCH`  | Safe search level (0=off, 1=moderate, 2=strict)                      | Server default |
-| `SEARXNG_DELAY_MIN`          | Request delay min (ms)                                               | `500`          |
-| `SEARXNG_DELAY_MAX`          | Request delay max (ms)                                               | `1500`         |
+| `SEARXNG_MIN_INTERVAL`       | Min interval between requests to same server (ms)                    | `1450`         |
 | `SEARXNG_RESULT_FIELDS`      | Fields included in result: url, title, summary, engine, sourceServer | All fields     |
 | `SEARXNG_VISIBLE_PARAMETERS` | Parameters visible to LLM                                            | `all`          |
 

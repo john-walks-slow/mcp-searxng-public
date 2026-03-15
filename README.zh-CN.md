@@ -38,8 +38,7 @@
 | `SEARXNG_DEFAULT_ENGINES`    | 默认搜索引擎（逗号分隔）                     | 服务器默认                              |
 | `SEARXNG_DEFAULT_PAGES`      | 默认获取页数                                 | `1`                                     |
 | `SEARXNG_DEFAULT_SAFESARCH`  | 默认安全搜索级别（0=关闭, 1=中等, 2=严格）   | 服务器默认                              |
-| `SEARXNG_DELAY_MIN`          | 请求延迟最小值（毫秒）                       | `500`                                   |
-| `SEARXNG_DELAY_MAX`          | 请求延迟最大值（毫秒）                       | `1500`                                  |
+| `SEARXNG_MIN_INTERVAL`       | 同一服务器两次请求的最小间隔（毫秒）         | `1450`                                  |
 | `SEARXNG_RESULT_FIELDS`      | 返回结果包含的字段                           | `url,title,summary,engine,sourceServer` |
 | `SEARXNG_VISIBLE_PARAMETERS` | 对 LLM 可见的参数                            | `all`                                   |
 

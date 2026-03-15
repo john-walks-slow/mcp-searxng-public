@@ -35,9 +35,11 @@ export const DEFAULT_CATEGORIES = process.env.SEARXNG_DEFAULT_CATEGORIES || ''
 // 默认时间范围
 export const DEFAULT_TIME_RANGE = process.env.SEARXNG_DEFAULT_TIME_RANGE || ''
 
-// 请求间延迟范围（毫秒）
-export const DELAY_MIN = parseInt(process.env.SEARXNG_DELAY_MIN || '500', 10)
-export const DELAY_MAX = parseInt(process.env.SEARXNG_DELAY_MAX || '1500', 10)
+// 同一服务器两次请求的最小间隔（毫秒）
+export const MIN_INTERVAL = parseInt(
+  process.env.SEARXNG_MIN_INTERVAL || '1450',
+  10,
+)
 
 // 结果中包含的字段（逗号分隔，如 "url,title,summary"）
 // 可选值: url, title, summary, engine, sourceServer
