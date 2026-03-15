@@ -20,7 +20,7 @@ Add to your MCP client configuration:
   "mcpServers": {
     "searxng": {
       "command": "npx",
-      "args": ["-y", "@johnnren/mcp-searxng-public-extended"],
+      "args": ["-y", "\"@johnnren/mcp-searxng-public-extended\""],
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
