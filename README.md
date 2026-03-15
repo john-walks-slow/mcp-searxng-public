@@ -1,5 +1,7 @@
 # mcp-searxng-public-extended
 
+[中文文档](README.zh-CN.md) | English
+
 Free web search for your AI using public SearXNG instances.
 
 > **Acknowledgment**: Inspired by [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public), extended with parallel multi-server requests, global throttling, configurable parameters, and bilingual schema support (zh/en).
@@ -26,7 +28,8 @@ Add to your MCP client configuration:
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
         "SEARXNG_DEFAULT_ENGINES": "google",
         "SEARXNG_DEFAULT_PAGES": "1",
-        "SEARXNG_DEFAULT_SAFESARCH": "0"
+        "SEARXNG_DEFAULT_SAFESARCH": "0",
+        "SEARXNG_RESULT_FIELDS": "url,title,summary"
       }
     }
   }

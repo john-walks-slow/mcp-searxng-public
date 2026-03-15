@@ -1,5 +1,7 @@
 # mcp-searxng-public-extended
 
+中文 | [English](README.md)
+
 使用公共 SearXNG 实例为你的 AI 提供免费网络搜索能力。
 
 > **致谢**：参考 [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public)，扩展了并行多服务器请求、全局节流、可配置参数、双语 Schema 支持（中/英）。
@@ -24,7 +26,8 @@
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
         "SEARXNG_DEFAULT_ENGINES": "google",
         "SEARXNG_DEFAULT_PAGES": "1",
-        "SEARXNG_DEFAULT_SAFESARCH": "0"
+        "SEARXNG_DEFAULT_SAFESARCH": "0",
+        "SEARXNG_RESULT_FIELDS": "url,title,summary"
       }
     }
   }
