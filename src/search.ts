@@ -1,3 +1,4 @@
+import { randomInt } from 'crypto'
 import { UserError } from 'fastmcp'
 import {
   BASE_URLS,
@@ -50,11 +51,72 @@ export async function fetchResults(
   // 获取请求许可（throttle 控制）
   await throttleManager.acquire(baseUrl)
 
-  // 随机选择 User-Agent
+  // 随机选择 User-Agent（整个流程使用同一个）
   const userAgent = getRandomUserAgent()
+
+  // ========== fetchCSS 策略 ==========
+  // 先访问主页并请求 CSS，模拟真实浏览器行为
+  try {
+    log.debug('访问主页建立 session', { baseUrl })
+
+    // 1. 访问主页
+    const homeHeaders = {
+      'User-Agent': userAgent,
+      'Accept':
+        'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'none',
+      'Sec-Fetch-User': '?1',
+    }
+
+    const homeResponse = await fetch(baseUrl, {
+      method: 'GET',
+      headers: homeHeaders,
+      redirect: 'follow',
+    })
+
+    const homeHtml = await homeResponse.text()
+
+    // 2. 解析并请求 CSS 文件
+    const cssMatch = homeHtml.match(
+      /<link[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']*client[^"']*\.css)["'][^>]*>/i,
+    )
+
+    if (cssMatch && cssMatch[1]) {
+      const cssPath = cssMatch[1]
+      const cssUrl = cssPath.startsWith('http')
+        ? cssPath
+        : new URL(cssPath, baseUrl).href
+
+      log.debug('请求 CSS 文件', { cssUrl })
+
+      await fetch(cssUrl, {
+        method: 'GET',
+        headers: {
+          'User-Agent': userAgent,
+          'Accept': 'text/css,*/*;q=0.1',
+          'Referer': baseUrl + '/',
+          'Sec-Fetch-Dest': 'style',
+          'Sec-Fetch-Mode': 'no-cors',
+          'Sec-Fetch-Site': 'same-origin',
+        },
+      })
+    }
+
+    // 随机延迟，模拟人类行为
+    const delay = randomInt(300, 600)
+    await new Promise((resolve) => setTimeout(resolve, delay))
+  } catch (initError) {
+    // 初始化失败不影响主请求
+    log.warn('初始化请求失败，继续搜索', {
+      error: initError instanceof Error ? initError.message : String(initError),
+    })
+  }
+
+  // ========== 执行搜索请求 ==========
   const headers = getBrowserHeaders(baseUrl, userAgent)
 
-  // 执行搜索请求
   let response: Response
   try {
     response = await fetch(url, {
