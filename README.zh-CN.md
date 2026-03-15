@@ -18,7 +18,7 @@
       "args": ["-y", "@johnnren/mcp-searxng-public"],
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
-        "SEARXNG_VISIBLE_PARAMETERS": "query,categories,safesearch,time_range,language,startPage",
+        "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
         "SEARXNG_DEFAULT_ENGINES": "google,bing",
         "SEARXNG_DEFAULT_PAGES": "1",
         "SEARXNG_DEFAULT_SAFESARCH": "0",
@@ -70,6 +70,14 @@
 | `startPage`  | number | 否   | 起始页码                                                           |
 
 **返回：** `{ url, title, summary, engine, sourceServer }` 数组
+
+## 发布
+
+```bash
+# 创建版本标签并推送以触发 GitHub Actions 发布
+git tag v0.1.0
+git push origin v0.1.0
+```
 
 ## 许可证
 

@@ -4,17 +4,9 @@ MCP server for SearXNG with HTML parsing and parallel racing. Works with virtual
 
 ## Features
 
-- **Parallel Racing**: Query multiple servers, use fastest responses
-- **HTML Parsing**: Works with all public SearXNG instances
-- **Smart Deduplication**: Merge results from multiple servers
+- **HTML Parsing**: Most public SearXNG instances disable JSON API for privacy, this server parses HTML responses directly
+- **Parallel Racing & Deduplication**: Randomly select `BATCH_SIZE` servers, query in parallel, merge results from top `MIN_SERVERS` fastest
 - **Rich Parameters**: categories, engines, safesearch, time range, language, pagination
-
-## Installation
-
-```bash
-pnpm install
-pnpm build
-```
 
 ## Usage with MCP Clients
 
@@ -28,7 +20,7 @@ Add to your MCP client configuration:
       "args": ["-y", "@johnnren/mcp-searxng-public"],
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
-        "SEARXNG_VISIBLE_PARAMETERS": "query,categories,safesearch,time_range,language,startPage",
+        "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
         "SEARXNG_DEFAULT_ENGINES": "google,bing",
         "SEARXNG_DEFAULT_PAGES": "1",
         "SEARXNG_DEFAULT_SAFESARCH": "0"
@@ -57,10 +49,6 @@ Add to your MCP client configuration:
 | `SEARXNG_RESULT_FIELDS`      | Fields included in result: url, title, summary, engine, sourceServer | All fields     |
 | `SEARXNG_VISIBLE_PARAMETERS` | Parameters visible to LLM                                            | `all`          |
 
-## Parallel Racing
-
-Randomly select `BATCH_SIZE` servers, query in parallel, merge results from top `MIN_SERVERS` fastest.
-
 ## Tool: `search`
 
 Web search via SearXNG.
@@ -79,15 +67,6 @@ Web search via SearXNG.
 | `startPage`  | number | No       | Starting page number                                                     |
 
 **Returns:** Array of `{ url, title, summary, engine, sourceServer }`
-
-**Examples:**
-
-```json
-{ "query": "TypeScript best practices" }
-{ "query": "AI news", "time_range": "day" }
-{ "query": "cats", "categories": "images" }
-{ "query": "React hooks", "engines": "github,stackoverflow" }
-```
 
 ## Publishing
 
