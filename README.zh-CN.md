@@ -2,7 +2,7 @@
 
 使用公共 SearXNG 实例为你的 AI 提供免费网络搜索能力。
 
-> **致谢**：本项目参考了 [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public) ，并在此基础上扩展了一些功能。
+> **致谢**：参考 [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public)，扩展了并行多服务器请求、全局节流、可配置参数、双语 Schema 支持（中/英）。
 
 ## 特性
 

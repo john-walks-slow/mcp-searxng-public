@@ -2,7 +2,7 @@
 
 Free web search for your AI using public SearXNG instances.
 
-> **Acknowledgment**: This project is inspired by [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public) and provides some extra features
+> **Acknowledgment**: Inspired by [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public), extended with parallel multi-server requests, global throttling, configurable parameters, and bilingual schema support (zh/en).
 
 ## Features
 
