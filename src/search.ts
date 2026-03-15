@@ -253,25 +253,20 @@ export async function raceSearch(
   // 等待所有请求完成
   const results = await Promise.all(searchPromises)
 
-  // 过滤有效结果并按响应时间排序
-  const validResults = results
-    .filter(
-      (r: ServerSearchResult | null): r is ServerSearchResult =>
-        r !== null && r.results.length > 0,
-    )
-    .sort(
-      (a: ServerSearchResult, b: ServerSearchResult) => a.duration - b.duration,
-    )
+  // 过滤有效结果（保持原始顺序）
+  const validResults = results.filter(
+    (r: ServerSearchResult | null): r is ServerSearchResult =>
+      r !== null && r.results.length > 0,
+  )
 
   log.debug(`成功获取结果的服务器: ${validResults.length} 个`, {
     servers: validResults.map((r: ServerSearchResult) => ({
       url: r.serverUrl,
-      duration: r.duration,
       count: r.results.length,
     })),
   })
 
-  // 取前 MIN_SERVERS 个最快的服务器的结果合并
+  // 取前 MIN_SERVERS 个成功的服务器的结果合并
   const topResults = validResults.slice(0, MIN_SERVERS)
 
   // 合并去重
