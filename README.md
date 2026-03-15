@@ -1,6 +1,6 @@
 # @johnnren/mcp-searxng-public
 
-MCP server for SearXNG with HTML parsing and parallel racing. Works with virtually all public instances since most disable JSON API for privacy.
+Free web search for your AI using public SearXNG instances — a privacy-focused alternative to search APIs.
 
 ## Features
 
