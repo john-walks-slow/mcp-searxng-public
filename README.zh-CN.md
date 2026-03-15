@@ -1,4 +1,4 @@
-# @johnnren/mcp-searxng-public-extended
+# mcp-searxng-public-extended
 
 使用公共 SearXNG 实例为你的 AI 提供免费网络搜索能力。
 

@@ -1,4 +1,4 @@
-# @johnnren/mcp-searxng-public-extended
+# mcp-searxng-public-extended
 
 Free web search for your AI using public SearXNG instances.
 
