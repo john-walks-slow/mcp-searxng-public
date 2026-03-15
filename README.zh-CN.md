@@ -19,10 +19,8 @@
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
-        "SEARXNG_DEFAULT_ENGINES": "google,bing",
         "SEARXNG_DEFAULT_PAGES": "1",
-        "SEARXNG_DEFAULT_SAFESARCH": "0",
-        "SEARXNG_DEFAULT_LANGUAGE": "zh"
+        "SEARXNG_DEFAULT_SAFESARCH": "0"
       }
     }
   }
@@ -36,11 +34,10 @@
 | `SEARXNG_BASE_URL`           | SearXNG 服务器地址（分号分隔）**必需**       | -                                       |
 | `SEARXNG_DEFAULT_LANGUAGE`   | 默认语言代码                                 | -                                       |
 | `SEARXNG_BATCH_SIZE`         | 每次搜索随机选择的服务器数量（数字或 `all`） | `3`                                     |
-| `SEARXNG_MIN_SERVERS`        | 合并前 N 个最快服务器的结果                  | `1`                                     |
+| `SEARXNG_MIN_SERVERS`        | 合并前 N 个最快服务器的结果                  | `2`                                     |
 | `SEARXNG_DEFAULT_ENGINES`    | 默认搜索引擎（逗号分隔）                     | 服务器默认                              |
 | `SEARXNG_DEFAULT_PAGES`      | 默认获取页数                                 | `1`                                     |
 | `SEARXNG_DEFAULT_SAFESARCH`  | 默认安全搜索级别（0=关闭, 1=中等, 2=严格）   | 服务器默认                              |
-| `SEARXNG_FETCH_COOKIE`       | 是否先从首页获取 cookie                      | `false`                                 |
 | `SEARXNG_DELAY_MIN`          | 请求延迟最小值（毫秒）                       | `500`                                   |
 | `SEARXNG_DELAY_MAX`          | 请求延迟最大值（毫秒）                       | `1500`                                  |
 | `SEARXNG_RESULT_FIELDS`      | 返回结果包含的字段                           | `url,title,summary,engine,sourceServer` |
@@ -74,9 +71,8 @@
 ## 发布
 
 ```bash
-# 创建版本标签并推送以触发 GitHub Actions 发布
-git tag v0.1.0
-git push origin v0.1.0
+npm version patch  # or minor/major
+git push --follow-tags
 ```
 
 ## 许可证

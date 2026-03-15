@@ -3,25 +3,16 @@ import { UserError } from 'fastmcp'
 import {
   BASE_URLS,
   BATCH_SIZE,
-  FETCH_COOKIE,
   MIN_SERVERS,
   DELAY_MIN,
   DELAY_MAX,
-  PAGE_DELAY_MIN,
-  PAGE_DELAY_MAX,
   DEFAULT_PAGES,
   DEFAULT_ENGINES,
   DEFAULT_SAFESARCH,
   DEFAULT_LANGUAGE,
 } from './config.js'
 import type { Log, SearchResult, ServerSearchResult } from './types.js'
-import {
-  getRandomUserAgent,
-  getBrowserHeaders,
-  getInitHeaders,
-  cookieJar,
-  extractDomain,
-} from './browser.js'
+import { getRandomUserAgent, getBrowserHeaders } from './browser.js'
 import { parseSearchResults } from './parser.js'
 import { shuffleAndTake, dedupeByUrls } from './utils.js'
 
@@ -62,36 +53,9 @@ export async function fetchResults(
   const userAgent = getRandomUserAgent()
   const headers = getBrowserHeaders(baseUrl, userAgent)
 
-  // 使用全局 fetch（undici agent 会自动处理连接复用）
+  // 执行搜索请求
   let response: Response
   try {
-    // 可选：先访问主页建立 session（获取 cookies）
-    if (FETCH_COOKIE) {
-      log.debug('访问主页建立 session', { baseUrl })
-
-      // 使用完整的浏览器请求头进行初始化请求
-      const initHeaders = getInitHeaders(baseUrl, userAgent)
-      const domain = extractDomain(baseUrl)
-
-      const homeResponse = await fetch(baseUrl, {
-        method: 'GET',
-        headers: initHeaders,
-        redirect: 'follow',
-      })
-
-      // 使用 undici 的 getSetCookies 解析并保存 cookies
-      cookieJar.setCookiesFromHeaders(domain, homeResponse.headers)
-      log.debug('保存 cookies', { domain })
-
-      await homeResponse.text()
-
-      // 随机延迟模拟人类行为
-      const delay = randomInt(DELAY_MIN, DELAY_MAX)
-      log.debug(`等待 ${delay}ms`)
-      await new Promise((resolve) => setTimeout(resolve, delay))
-    }
-
-    // 执行搜索请求（带 cookies）
     response = await fetch(url, {
       method: 'GET',
       headers,
@@ -156,7 +120,7 @@ export async function fetchMultiplePages(
 
       if (i < pages - 1) {
         await new Promise((resolve) =>
-          setTimeout(resolve, randomInt(PAGE_DELAY_MIN, PAGE_DELAY_MAX)),
+          setTimeout(resolve, randomInt(DELAY_MIN, DELAY_MAX)),
         )
       }
     } catch (error) {

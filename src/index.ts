@@ -1,9 +1,12 @@
 #!/usr/bin/env node
-import { FastMCP, UserError } from 'fastmcp'
+import { FastMCP, UserError, Logger } from 'fastmcp'
 import { z } from 'zod'
 import type { McpSearchParams } from './types.js'
 import {
   isVisible,
+  BASE_URLS,
+  BATCH_SIZE,
+  MIN_SERVERS,
   DEFAULT_ENGINES,
   DEFAULT_SAFESARCH,
   DEFAULT_LANGUAGE,
@@ -20,12 +23,46 @@ const VERSION = '1.0.0'
 const opt = <T extends z.ZodTypeAny>(name: string, schema: T) =>
   isVisible(name) ? { [name]: schema } : {}
 
+/** 控制台 Logger（用于调试） */
+class ConsoleLogger implements Logger {
+  debug(...args: unknown[]): void {
+    console.debug('[DEBUG]', new Date().toISOString(), ...args)
+  }
+
+  error(...args: unknown[]): void {
+    console.error('[ERROR]', new Date().toISOString(), ...args)
+  }
+
+  info(...args: unknown[]): void {
+    console.info('[INFO]', new Date().toISOString(), ...args)
+  }
+
+  log(...args: unknown[]): void {
+    console.log('[LOG]', new Date().toISOString(), ...args)
+  }
+
+  warn(...args: unknown[]): void {
+    console.warn('[WARN]', new Date().toISOString(), ...args)
+  }
+}
+
 // ============ MCP 服务器 ============
 
 function startServer(): void {
+  // 启动时打印配置信息
+  console.log('[INFO] SearXNG MCP Server 启动')
+  console.log('[INFO] 配置:', {
+    BASE_URLS,
+    BATCH_SIZE,
+    MIN_SERVERS,
+    DEFAULT_ENGINES,
+    DEFAULT_LANGUAGE,
+  })
+
   const server = new FastMCP({
     name: 'SearXNG Search',
     version: VERSION,
+    logger: new ConsoleLogger(),
   })
 
   server.addTool({

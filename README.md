@@ -21,7 +21,6 @@ Add to your MCP client configuration:
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
-        "SEARXNG_DEFAULT_ENGINES": "google,bing",
         "SEARXNG_DEFAULT_PAGES": "1",
         "SEARXNG_DEFAULT_SAFESARCH": "0"
       }
@@ -39,11 +38,10 @@ Add to your MCP client configuration:
 | `SEARXNG_BASE_URL`           | SearXNG server URLs (semicolon-separated) **Required**               | -              |
 | `SEARXNG_DEFAULT_LANGUAGE`   | Default language code                                                | -              |
 | `SEARXNG_BATCH_SIZE`         | Servers to query per search (number or `all`)                        | `3`            |
-| `SEARXNG_MIN_SERVERS`        | Merge results from top N fastest servers                             | `1`            |
+| `SEARXNG_MIN_SERVERS`        | Merge results from top N fastest servers                             | `2`            |
 | `SEARXNG_DEFAULT_ENGINES`    | Default engines (comma-separated)                                    | Server default |
 | `SEARXNG_DEFAULT_PAGES`      | Default pages to fetch                                               | `1`            |
 | `SEARXNG_DEFAULT_SAFESARCH`  | Safe search level (0=off, 1=moderate, 2=strict)                      | Server default |
-| `SEARXNG_FETCH_COOKIE`       | Fetch cookie from homepage first                                     | `false`        |
 | `SEARXNG_DELAY_MIN`          | Request delay min (ms)                                               | `500`          |
 | `SEARXNG_DELAY_MAX`          | Request delay max (ms)                                               | `1500`         |
 | `SEARXNG_RESULT_FIELDS`      | Fields included in result: url, title, summary, engine, sourceServer | All fields     |
@@ -71,9 +69,8 @@ Web search via SearXNG.
 ## Publishing
 
 ```bash
-# Create a version tag and push to trigger GitHub Actions release
-git tag v0.1.0
-git push origin v0.1.0
+npm version patch  # or minor/major
+git push --follow-tags
 ```
 
 ## License

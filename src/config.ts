@@ -10,10 +10,10 @@ export const BASE_URLS: string[] = (process.env.SEARXNG_BASE_URL || '')
 export const DEFAULT_LANGUAGE = process.env.SEARXNG_DEFAULT_LANGUAGE || 'en'
 
 // 每次搜索随机抽取几个服务器（number 或 'all'）
-export const BATCH_SIZE = process.env.SEARXNG_BATCH_SIZE || '1'
+export const BATCH_SIZE = process.env.SEARXNG_BATCH_SIZE || '3'
 
 // 取前几个最快返回的服务器的结果聚合
-export const MIN_SERVERS = parseInt(process.env.SEARXNG_MIN_SERVERS || '1', 10)
+export const MIN_SERVERS = parseInt(process.env.SEARXNG_MIN_SERVERS || '2', 10)
 
 // 默认搜索引擎
 export const DEFAULT_ENGINES = process.env.SEARXNG_DEFAULT_ENGINES || ''
@@ -35,22 +35,9 @@ export const DEFAULT_CATEGORIES = process.env.SEARXNG_DEFAULT_CATEGORIES || ''
 // 默认时间范围
 export const DEFAULT_TIME_RANGE = process.env.SEARXNG_DEFAULT_TIME_RANGE || ''
 
-// 是否先访问主页获取 cookie（默认 false）
-export const FETCH_COOKIE = process.env.SEARXNG_FETCH_COOKIE === 'true'
-
 // 请求间延迟范围（毫秒）
 export const DELAY_MIN = parseInt(process.env.SEARXNG_DELAY_MIN || '500', 10)
 export const DELAY_MAX = parseInt(process.env.SEARXNG_DELAY_MAX || '1500', 10)
-
-// 页面请求间延迟范围（毫秒）- 用于多页爬取
-export const PAGE_DELAY_MIN = parseInt(
-  process.env.SEARXNG_PAGE_DELAY_MIN || '500',
-  10,
-)
-export const PAGE_DELAY_MAX = parseInt(
-  process.env.SEARXNG_PAGE_DELAY_MAX || '1500',
-  10,
-)
 
 // 结果中包含的字段（逗号分隔，如 "url,title,summary"）
 // 可选值: url, title, summary, engine, sourceServer
