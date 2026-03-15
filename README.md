@@ -1,6 +1,6 @@
 # @johnnren/mcp-searxng-public
 
-Free web search for your AI using public SearXNG instances — a privacy-focused alternative to search APIs.
+Free web search for your AI using public SearXNG instances.
 
 ## Features
 
@@ -38,6 +38,7 @@ Add to your MCP client configuration:
 | Variable                     | Description                                                          | Default        |
 | ---------------------------- | -------------------------------------------------------------------- | -------------- |
 | `SEARXNG_BASE_URL`           | SearXNG server URLs (semicolon-separated) **Required**               | -              |
+| `SEARXNG_SCHEMA_LANG`        | Schema language: `zh` (Chinese) or `en` (English)                    | `zh`           |
 | `SEARXNG_DEFAULT_LANGUAGE`   | Default language code                                                | -              |
 | `SEARXNG_BATCH_SIZE`         | Servers to query per search (number or `all`)                        | `1`            |
 | `SEARXNG_MIN_SERVERS`        | Merge results from top N fastest servers                             | `1`            |

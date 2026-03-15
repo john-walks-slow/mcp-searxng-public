@@ -3,7 +3,6 @@ import { FastMCP, UserError, Logger } from 'fastmcp'
 import { z } from 'zod'
 import type { McpSearchParams } from './types.js'
 import {
-  isVisible,
   BASE_URLS,
   BATCH_SIZE,
   MIN_SERVERS,
@@ -13,15 +12,13 @@ import {
   DEFAULT_PAGES,
   DEFAULT_CATEGORIES,
   DEFAULT_TIME_RANGE,
+  opt,
 } from './config.js'
 import { raceSearch } from './search.js'
 import { filterResultFields } from './utils.js'
+import { t, CURRENT_LANG } from './i18n.js'
 
 const VERSION = '1.0.0'
-
-/** 条件展开：仅在参数可见时添加到 schema */
-const opt = <T extends z.ZodTypeAny>(name: string, schema: T) =>
-  isVisible(name) ? { [name]: schema } : {}
 
 /** 控制台 Logger（用于调试） */
 class ConsoleLogger implements Logger {
@@ -57,6 +54,7 @@ function startServer(): void {
     MIN_SERVERS,
     DEFAULT_ENGINES,
     DEFAULT_LANGUAGE,
+    LANG: CURRENT_LANG,
   })
 
   const server = new FastMCP({
@@ -67,26 +65,16 @@ function startServer(): void {
 
   server.addTool({
     name: 'search',
-    description: '使用 SearXNG 进行网络搜索，返回最快有效结果。',
+    description: t.toolDescription,
     parameters: z.object({
-      query: z.string().describe('搜索查询'),
+      query: z.string().describe(t.query),
       ...opt(
         'categories',
-        z
-          .string()
-          .describe(
-            `搜索类别，用逗号分隔。支持：general, images, news, music, videos, science, it, social_media。默认: ${DEFAULT_CATEGORIES || '不指定'}`,
-          )
-          .optional(),
+        z.string().describe(t.categories(DEFAULT_CATEGORIES)).optional(),
       ),
       ...opt(
         'engines',
-        z
-          .string()
-          .describe(
-            `搜索引擎，用逗号分隔。支持：google, bing, duckduckgo, brave, qwant, startpage, wikipedia, github, stackoverflow, reddit, youtube, arxiv。默认: ${DEFAULT_ENGINES || '不指定'}`,
-          )
-          .optional(),
+        z.string().describe(t.engines(DEFAULT_ENGINES)).optional(),
       ),
       ...opt(
         'safesearch',
@@ -94,40 +82,22 @@ function startServer(): void {
           .number()
           .min(0)
           .max(2)
-          .describe(
-            `安全搜索: 0=关闭, 1=中等, 2=严格。默认: ${DEFAULT_SAFESARCH ?? '不指定'}`,
-          )
+          .describe(t.safesearch(DEFAULT_SAFESARCH))
           .optional(),
       ),
       ...opt(
         'time_range',
-        z
-          .string()
-          .describe(
-            `过滤时间范围： day=一天内, week=一周内, month=一个月内, year=一年内。默认: ${DEFAULT_TIME_RANGE || '不指定'}`,
-          )
-          .optional(),
+        z.string().describe(t.timeRange(DEFAULT_TIME_RANGE)).optional(),
       ),
       ...opt(
         'language',
-        z
-          .string()
-          .describe(`语言代码 (en, zh, ja)。默认: ${DEFAULT_LANGUAGE}`)
-          .optional(),
+        z.string().describe(t.language(DEFAULT_LANGUAGE)).optional(),
       ),
       ...opt(
         'pages',
-        z
-          .number()
-          .min(1)
-          .max(5)
-          .describe(`获取几页结果（建议每次获取 1 页）。默认: ${DEFAULT_PAGES}`)
-          .optional(),
+        z.number().min(1).max(5).describe(t.pages(DEFAULT_PAGES)).optional(),
       ),
-      ...opt(
-        'startpage',
-        z.number().min(1).describe('起始页码。默认: 1').optional(),
-      ),
+      ...opt('startpage', z.number().min(1).describe(t.startpage).optional()),
     }),
     annotations: {
       readOnlyHint: true,

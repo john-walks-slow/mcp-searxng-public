@@ -1,6 +1,6 @@
 # @johnnren/mcp-searxng-public
 
-允许你的 AI 使用公共 SearXNG 实例进行搜索。（可作为搜索 API 的替代）
+使用公共 SearXNG 实例为你的 AI 提供免费网络搜索能力。
 
 ## 特性
 
@@ -34,6 +34,7 @@
 | 环境变量                     | 说明                                         | 默认值                                  |
 | ---------------------------- | -------------------------------------------- | --------------------------------------- |
 | `SEARXNG_BASE_URL`           | SearXNG 服务器地址（分号分隔）**必需**       | -                                       |
+| `SEARXNG_SCHEMA_LANG`        | Schema 语言：`zh`（中文）或 `en`（英文）     | `zh`                                    |
 | `SEARXNG_DEFAULT_LANGUAGE`   | 默认语言代码                                 | -                                       |
 | `SEARXNG_BATCH_SIZE`         | 每次搜索随机选择的服务器数量（数字或 `all`） | `1`                                     |
 | `SEARXNG_MIN_SERVERS`        | 合并前 N 个最快服务器的结果                  | `1`                                     |

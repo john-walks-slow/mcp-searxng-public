@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 // ============ 环境变量配置 ============
 
 // SearXNG 服务器列表（分号分隔）
@@ -66,3 +68,7 @@ const VISIBLE_SET: Set<string> | null = (() => {
 /** 检查参数是否对 LLM 可见 */
 export const isVisible = (name: string): boolean =>
   VISIBLE_SET === null || VISIBLE_SET.has(name.toLowerCase())
+
+/** 条件展开：仅在参数可见时添加到 schema */
+export const opt = <T extends z.ZodTypeAny>(name: string, schema: T) =>
+  isVisible(name) ? { [name]: schema } : {}
