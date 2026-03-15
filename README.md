@@ -1,6 +1,6 @@
 # mcp-searxng-public-extended
 
-English | [Chinese](README.zh-CN.md) |
+English | [Chinese](README.zh-CN.md)
 
 Free web search for your AI using public SearXNG instances.
 
