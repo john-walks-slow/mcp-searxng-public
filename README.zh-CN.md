@@ -2,6 +2,8 @@
 
 使用公共 SearXNG 实例为你的 AI 提供免费网络搜索能力。
 
+> **致谢**：本项目参考了 [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public) ，并在此基础上扩展了一些功能。
+
 ## 特性
 
 - **HTML 解析**：大多数公共 SearXNG 实例禁用了 JSON API，本服务器直接解析 HTML 响应

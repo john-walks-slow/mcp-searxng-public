@@ -2,6 +2,8 @@
 
 Free web search for your AI using public SearXNG instances.
 
+> **Acknowledgment**: This project is inspired by [pwilkin/mcp-searxng-public](https://github.com/pwilkin/mcp-searxng-public) and provides some extra features
+
 ## Features
 
 - **HTML Parsing**: Most public SearXNG instances disable JSON API, this server parses HTML responses directly
@@ -18,7 +20,7 @@ Add to your MCP client configuration:
   "mcpServers": {
     "searxng": {
       "command": "npx",
-      "args": ["-y", "@johnnren/mcp-searxng-public"],
+      "args": ["-y", "@johnnren/mcp-searxng-public-extended"],
       "env": {
         "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
         "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
