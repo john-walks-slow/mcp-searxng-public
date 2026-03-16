@@ -35,10 +35,9 @@ jobs:
 
       - name: Publish to npm
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
           pnpm publish --provenance --access public --no-git-checks
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
