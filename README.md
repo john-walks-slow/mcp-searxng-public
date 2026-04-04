@@ -21,15 +21,18 @@ Add to your MCP client configuration:
 {
   "mcpServers": {
     "searxng": {
+      "args": [
+        "-y",
+        "@johnnren/mcp-searxng-public-extended"
+      ],
       "command": "npx",
-      "args": ["-y", "\"@johnnren/mcp-searxng-public-extended\""],
       "env": {
-        "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au;https://searx.perennialte.ch;https://searx.rhscz.eu",
-        "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage",
-        "SEARXNG_DEFAULT_ENGINES": "google",
+        "SEARXNG_BASE_URL": "https://opnxng.com;https://priv.au",
+        "SEARXNG_DEFAULT_ENGINES": "google,duckduckgo,brave",
         "SEARXNG_DEFAULT_PAGES": "1",
         "SEARXNG_DEFAULT_SAFESARCH": "0",
-        "SEARXNG_RESULT_FIELDS": "url,title,summary"
+        "SEARXNG_RESULT_FIELDS": "url,title,summary",
+        "SEARXNG_VISIBLE_PARAMETERS": "query,categories,time_range,language,startPage"
       }
     }
   }
